@@ -48,7 +48,7 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://finance:pa55word@localhost/finance?sslmode=disable", "PostgreSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://zebra:pa55word@localhost/coffee?sslmode=disable", "PostgreSQL DSN")
 
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")

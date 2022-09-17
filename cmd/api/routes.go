@@ -12,17 +12,14 @@ func (app *application) routes() http.Handler {
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)
 	router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
 
-	//router.HandlerFunc(http.MethodGet, "/api/payments",  app.listPaymentsHandler)
-	//router.HandlerFunc(http.MethodPost, "/api/payments", app.addPaymentHandler)
-	//router.HandlerFunc(http.MethodGet, "/api/payments/:id", app.showPaymentHandler)
-	//router.HandlerFunc(http.MethodPatch, "/api/payments/:id",  app.updatePaymentHandler)
-	//router.HandlerFunc(http.MethodDelete, "/api/payments/:id", app.deletePaymentHandler)
-	//
-	//router.HandlerFunc(http.MethodGet, "/api/categories",  app.listCategoriesHandler)
-	//router.HandlerFunc(http.MethodPost, "/api/categories", app.addCategoryHandler)
-	//router.HandlerFunc(http.MethodGet, "/api/categories/:id", app.showCategoryHandler)
-	//router.HandlerFunc(http.MethodPatch, "/api/categories/:id",  app.editCategoryHandler)
-	//router.HandlerFunc(http.MethodDelete, "/api/categories/:id", app.deleteCategoryHandler)
+	router.HandlerFunc(http.MethodPost, "/api/createUser", app.createUser)
+	router.HandlerFunc(http.MethodGet, "/api/users", app.getUsers)
+
+	router.HandlerFunc(http.MethodGet, "/api/products", app.ListProductsHandler)
+	router.HandlerFunc(http.MethodPost, "/api/products", app.createProductHandler)
+	router.HandlerFunc(http.MethodGet, "/api/products/:id", app.GetProductHandler)
+	router.HandlerFunc(http.MethodPatch, "/api/products/:id", app.updateProductHandler)
+	router.HandlerFunc(http.MethodDelete, "/api/products/:id", app.deleteProductHandler)
 
 	return app.recoverPanic(app.enableCORS(app.rateLimit(router)))
 }
