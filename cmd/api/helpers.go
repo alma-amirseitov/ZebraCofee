@@ -1,10 +1,10 @@
 package main
 
 import (
+	"ZebraCofee/internal/validator"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/alma-amirseitov/finance/internal/validator"
 	"io"
 	"net/http"
 	"net/url"
