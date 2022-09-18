@@ -73,10 +73,9 @@ func (p ProductModel) Get(id int64) (*Products, error) {
 }
 
 func (p ProductModel) Update(product *Products) error {
-	query := `
-        UPDATE Products 
-        SET product_name = $1, category = $2, net_cost = $3, price = $4, picture_url = $5, description = $6
-        WHERE id = $7`
+	query := `UPDATE Products 
+			  SET product_name = $1, category = $2, net_cost = $3, price = $4, picture_url = $5, description = $6 
+			  WHERE id = $7`
 
 	args := []interface{}{
 		product.ProductName,
@@ -91,8 +90,9 @@ func (p ProductModel) Update(product *Products) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := p.DB.QueryRowContext(ctx, query, args...).Scan()
+	err := p.DB.QueryRowContext(ctx, query, args...).Scan(&product.ID)
 	if err != nil {
+		fmt.Println(err.Error(), query, product.ID)
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
 			return ErrEditConflict

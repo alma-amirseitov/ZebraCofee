@@ -39,7 +39,7 @@ func (app *application) createProductHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	headers := make(http.Header)
-	headers.Set("Location", fmt.Sprintf("/v1/movies/%d", product.ID))
+	headers.Set("Location", fmt.Sprintf("/api/products/%d", product.ID))
 
 	err = app.writeJSON(w, http.StatusCreated, envelope{"product": product}, headers)
 	if err != nil {

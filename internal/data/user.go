@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -42,7 +41,6 @@ func (u UserModel) Insert(user *User) error {
 
 	err := u.DB.QueryRowContext(ctx, query, args...).Scan(&user.ID)
 	if err != nil {
-		fmt.Println(err.Error(), query)
 		switch {
 		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
 			return ErrDuplicateEmail
@@ -53,38 +51,22 @@ func (u UserModel) Insert(user *User) error {
 	return nil
 }
 
-func (u UserModel) GetUsers() ([]User, error) {
+func (u UserModel) GetByUsername(username string) (*User, error) {
 	query := `
-        SELECT id,  username, email, phone_number
-        FROM users`
+        SELECT id, username, password
+        FROM users
+        WHERE username = $1`
+
+	var user User
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := u.DB.QueryContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	users := []User{}
-
-	for rows.Next() {
-		var user User
-
-		err := rows.Scan(
-			&user.ID,
-			&user.Username,
-			&user.Email,
-			&user.PhoneNumber,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, user)
-	}
-
+	err := u.DB.QueryRowContext(ctx, query, username).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Password.hash,
+	)
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
@@ -93,8 +75,5 @@ func (u UserModel) GetUsers() ([]User, error) {
 			return nil, err
 		}
 	}
-	fmt.Println(users)
-	return users, nil
+	return &user, nil
 }
-
-//func (u *UserModel) GetUserById(id int) (*User,error)
